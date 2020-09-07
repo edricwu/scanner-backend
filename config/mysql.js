@@ -1,9 +1,9 @@
 var mysql = require('mysql');
 const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'mysql',
-    database: 'scanner_app',
+    host: 'us-cdbr-east-02.cleardb.com',
+    user: 'b7412554ef8499',
+    password: '4a240af9',
+    database: 'heroku_d999f2664f85b0c',
     timezone: '+01:00'
   });
 
