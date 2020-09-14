@@ -6,6 +6,7 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var userInfoRouter = require('./routes/users/users');
 var dataEntryRouter = require('./routes/dataEntry');
+var dataViewRouter = require('./routes/dataView');
 
 var app = express();
 
@@ -18,5 +19,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', userInfoRouter);
 app.use('/data_entry', dataEntryRouter);
+app.use('/data_view', dataViewRouter);
 
 module.exports = app;
