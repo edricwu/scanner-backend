@@ -114,7 +114,7 @@ router.post("/bak/times", function(req, res, next) {
     // console.log(req);
     try {
         var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
-        db.query("SELECT DISTINCT bak_log.id, TIME(bak_log.date_added) FROM bak_log \
+        db.query("SELECT DISTINCT bak_log.id, TIME(bak_log.date_added) AS Time FROM bak_log \
             INNER JOIN bak_info ON bak_log.bak_id = bak_info.id WHERE \
             (DATE(bak_log.date_added), unit) = (str_to_date(?, '%d/%m/%Y'), ?);", 
             [req.body.date, req.body.unit], function(err, result) {
