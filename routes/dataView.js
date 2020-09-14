@@ -173,7 +173,7 @@ router.get("/semaian/semaian_id/:id", function(req, res, next) {
     // console.log(req);
     try {
         var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
-        db.query('SELECT semaian_log.*, users.name AS username, semaian_info.name, semaian_info.merek_seed, semaian_info.batch_no, semaian_info.jumlah_awal \
+        db.query('SELECT semaian_log.*, users.name AS username, semaian_info.name, semaian_info.date_added AS date_created, semaian_info.merek_seed, semaian_info.batch_no, semaian_info.jumlah_awal \
             from semaian_log INNER JOIN users ON semaian_log.user_id = users.id \
             INNER JOIN semaian_info ON semaian_log.semaian_id = semaian_info.id WHERE semaian_log.id = ?;',
             req.params.id, function(err, result) {
