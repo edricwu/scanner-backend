@@ -134,7 +134,7 @@ router.post("/semaian/times", function(req, res, next) {
     // console.log(req);
     try {
         var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
-        db.query("SELECT DISTINCT semaian_log.id, TIME(semaian_log.date_added) FROM semaian_log \
+        db.query("SELECT DISTINCT semaian_log.id, TIME(semaian_log.date_added) AS Time FROM semaian_log \
             INNER JOIN semaian_info ON semaian_log.semaian_id = semaian_info.id WHERE \
             (DATE(semaian_log.date_added), CONCAT(name, ' - ', batch_no)) = (str_to_date(?, '%d/%m/%Y'), ?);", 
             [req.body.date, req.body.unit], function(err, result) {
