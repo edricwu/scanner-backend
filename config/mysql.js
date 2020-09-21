@@ -20,7 +20,7 @@ const connection = mysql.createPool({
     user: 'bf7f021fb15657',
     password: '261c10fc',
     database: 'heroku_c5ac1ba9fd3be0b',
-    timezone: '+01:00'
+    timezone: 'Asia/Jakarta'
 });
 
 // connection.connect(function (err) {
