@@ -26,7 +26,7 @@ router.post('/add_user', function (req, res, next) {
     var password = crypto.createHash('sha256').update(req.body.password).digest('hex');
     try {
         var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
-        db.query("SELECT level FROM users WHERE id = ?", jwt_info["id"], function(err, row) {
+        db.query("SELECT level FROM users WHERE id = ?", 1, function(err, row) {
             if (row[0]["level"] < 3){
                 db.query("SELECT * FROM users WHERE name = ?", req.body.name, function (err, row) {
                     if (row.length != 0) {
