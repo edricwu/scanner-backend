@@ -20,8 +20,20 @@ const connection = mysql.createPool({
     user: 'bf7f021fb15657',
     password: '261c10fc',
     database: 'heroku_c5ac1ba9fd3be0b',
-    timezone: 'Asia/Jakarta'
+    timezone: 'UTC',
+    dateStrings: [
+        'DATE',
+        'DATETIME'
+    ]
 });
+
+connection.on('connection', conn => {
+    conn.query("SET time_zone='+07:00';", error => {
+        if(error){
+            throw error
+        }
+    })
+})
 
 // connection.connect(function (err) {
 //     if (err) throw err;
