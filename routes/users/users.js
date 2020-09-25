@@ -84,15 +84,15 @@ router.post('/add_user', function (req, res, next) {
 router.post('/manage_user', function(req, res, next) {
     var str = req.get('Authorization');
     try {
-        var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
-        db.query("SELECT level FROM users WHERE id = ?", jwt_info["id"], function(err, row0) {
+        // var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
+        db.query("SELECT level FROM users WHERE id = ?", 2, function(err, row0) {
             if (row0[0]["level"] < 3){
-                db.query("SELECT level FROM users WHERE id = ?", req.params.id, function(err, row1) {
+                db.query("SELECT level FROM users WHERE id = ?", req.body.id, function(err, row1) {
                     if (row0[0]["level"] <= row1[0]["level"]) {
                         if (req.body.password != "") {
                             var password = crypto.createHash('sha256').update(req.body.password).digest('hex');
-                            db.query("UPDATE users SET name = ?, password = ?, level = ?", 
-                                [req.body.name, password, req.body.level], function(err, row) {
+                            db.query("UPDATE users SET name = ?, password = ?, level = ? WHERE id = ", 
+                                [req.body.name, password, req.body.level, req.body.id], function(err, row) {
                                     res.send("User has been modified");
                                 }
                             )
@@ -129,9 +129,9 @@ router.post('/delete_user', function(req, res, next) {
         var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
         db.query("SELECT level FROM users WHERE id = ?", jwt_info["id"], function(err, row0) {
             if (row0[0]["level"] < 3) {
-                db.query("SELECT level FROM users WHERE id = ?", req.params.id, function(err, row1) {
+                db.query("SELECT level FROM users WHERE id = ?", req.body.id, function(err, row1) {
                     if (row0[0]["level"] <= row1[0]["level"]) {
-                        db.query("DELETE FROM users WHERE id = ?", req.params.id, function(err, row) {
+                        db.query("DELETE FROM users WHERE id = ?", req.body.id, function(err, row) {
                             res.send("User deleted");
                         })
                     }
