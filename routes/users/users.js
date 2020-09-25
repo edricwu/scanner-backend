@@ -89,7 +89,7 @@ router.post('/manage_user', function(req, res, next) {
             if (row0[0]["level"] < 3){
                 db.query("SELECT level FROM users WHERE id = ?", req.params.id, function(err, row1) {
                     if (row0[0]["level"] <= row1[0]["level"]) {
-                        if (req.body.password != "" {
+                        if (req.body.password != "") {
                             var password = crypto.createHash('sha256').update(req.body.password).digest('hex');
                             db.query("UPDATE users SET name = ?, password = ?, level = ?", 
                                 [req.body.name, password, req.body.level], function(err, row) {
