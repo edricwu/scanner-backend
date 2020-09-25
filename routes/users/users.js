@@ -14,7 +14,7 @@ router.get('/', function (req, res, next) {
     var str = req.get('Authorization');
     try {
         var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
-        db.query("SELECT name, level FROM users WHERE level >= (SELECT level FROM users where id = ?)", jwt_info["id"], function (err, result) {
+        db.query("SELECT id, name, level FROM users WHERE level >= (SELECT level FROM users where id = ?)", jwt_info["id"], function (err, result) {
             res.send(result);
         })
     }
