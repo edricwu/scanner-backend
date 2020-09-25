@@ -11,9 +11,17 @@ var db = require('../../config/mysql');
 
 /* GET users listing. */
 router.get('/', function (req, res, next) {
-    db.query("select name, level from users", function (err, result) {
-        res.send(result);
-    })
+    var str = req.get('Authorization');
+    try {
+        var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
+        db.query("SELECT name, level FROM users WHERE level >= (SELECT level FROM users where id = ?)", jwt_info["id"], function (err, result) {
+            res.send(result);
+        })
+    }
+    catch{
+        res.status(401);
+        res.send("Bad Token");
+    }
 });
 
 router.get('/:id', function (req, res, next) {
@@ -22,11 +30,29 @@ router.get('/:id', function (req, res, next) {
     })
 });
 
-router.post('/add_user', function (req, res, next) {
+router.post('/login', function (req, res, next) {
     var password = crypto.createHash('sha256').update(req.body.password).digest('hex');
+    db.query("SELECT * FROM users WHERE (name, password) = (?, ?)", [req.body.name, password], function (err, row) {
+        if (row.length != 0) {
+            var payload = {
+                id: row[0]["id"],
+            };
+            var token = jwt.sign(payload, process.env.JWT_SECRET_KEY, {algorithm: 'HS256', expiresIn: "15d"});
+            // var test = jwt.verify(token, process.env.JWT_SECRET_KEY, {algorithm: 'HS256'});
+            res.send(token);
+        }
+        else {
+            res.status(401)
+            res.send("Incorrect username or password");
+        }
+    })
+});
+
+router.post('/add_user', function (req, res, next) {
+    var str = req.get('Authorization');
     try {
         var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
-        db.query("SELECT level FROM users WHERE id = ?", 1, function(err, row) {
+        db.query("SELECT level FROM users WHERE id = ?", jwt_info["id"], function(err, row) {
             if (row[0]["level"] < 3){
                 db.query("SELECT * FROM users WHERE name = ?", req.body.name, function (err, row) {
                     if (row.length != 0) {
@@ -35,6 +61,7 @@ router.post('/add_user', function (req, res, next) {
                         res.send("A user with that name already exists");
                     }
                     else {
+                        var password = crypto.createHash('sha256').update(req.body.password).digest('hex');
                         db.query("INSERT INTO users (name, password, level) VALUES (?, ?, ?)",
                             [req.body.name, password, req.body.level],
                         );
@@ -54,26 +81,68 @@ router.post('/add_user', function (req, res, next) {
     }
 })
 
-// router.post('/manage_user', function (req, res, next) {
-//     var password = crypto.createHash('sha256').update(req.body.password).digest('hex');
-// })
+router.post('/manage_user', function(req, res, next) {
+    var str = req.get('Authorization');
+    try {
+        var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
+        db.query("SELECT level FROM users WHERE id = ?", jwt_info["id"], function(err, row0) {
+            if (row0[0]["level"] < 3){
+                db.query("SELECT level FROM users WHERE id = ?", req.params.id, function(err, row1) {
+                    if (row0[0]["level"] <= row1[0]["level"]) {
+                        if (req.body.password != "" {
+                            var password = crypto.createHash('sha256').update(req.body.password).digest('hex');
+                            db.query("UPDATE users SET name = ?, password = ?, level = ?", 
+                                [req.body.name, password, req.body.level], function(err, row) {
+                                    res.send("User has been modified");
+                                }
+                            )
+                        }
+                        else {
+                            db.query("UPDATE users SET name = ?, level = ?", 
+                                [req.body.name, req.body.level], function(err, row) {
+                                    res.send("User has been modified");
+                                }
+                            )
+                        }
+                    }
+                    else {
+                        res.status(403);
+                        res.send("Insufficient access right");
+                    }
+                })
+            }
+            else {
+                res.status(403);
+                res.send("Insufficient access right");
+            }
+        });
+    }
+    catch{
+        res.status(401);
+        res.send("Bad Token");
+    }
+})
 
-router.post('/login', function (req, res, next) {
-    var password = crypto.createHash('sha256').update(req.body.password).digest('hex');
-    db.query("SELECT * FROM users WHERE (name, password) = (?, ?)", [req.body.name, password], function (err, row) {
-        if (row.length != 0) {
-            var payload = {
-                id: row[0]["id"],
-            };
-            var token = jwt.sign(payload, process.env.JWT_SECRET_KEY, {algorithm: 'HS256', expiresIn: "15d"});
-            // var test = jwt.verify(token, process.env.JWT_SECRET_KEY, {algorithm: 'HS256'});
-            res.send(token);
-        }
-        else {
-            res.status(401)
-            res.send("Incorrect username or password");
-        }
-    })
-});
+router.post('/delete_user', function(req, res, next) {
+    var str = req.get('Authorization');
+    try {
+        var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
+        db.query("SELECT level FROM users WHERE id = ?", jwt_info["id"], function(err, row0) {
+            if (row0[0]["level"] < 3) {
+                db.query("SELECT level FROM users WHERE id = ?", req.params.id, function(err, row1) {
+                    if (row0[0]["level"] <= row1[0]["level"]) {
+                        db.query("DELETE FROM users WHERE id = ?", req.params.id, function(err, row) {
+                            res.send("User deleted");
+                        })
+                    }
+                })
+            }
+        })
+    }
+    catch {
+        res.status(401);
+        res.send("Bad Token");
+    }
+})
 
 module.exports = router;
