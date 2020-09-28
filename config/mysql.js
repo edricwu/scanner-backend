@@ -24,7 +24,8 @@ const connection = mysql.createPool({
     dateStrings: [
         'DATE',
         'DATETIME'
-    ]
+    ],
+    multipleStatements: true
 });
 
 connection.on('connection', conn => {
