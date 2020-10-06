@@ -47,7 +47,7 @@ router.get("/bak/:month/:year", function (req, res, next) {
                         pemakaian_air_ke AS 'Pemakaian Air ke', keterangan AS 'Keterangan', users.name AS 'User' FROM bak_log \
                     INNER JOIN bak_info ON bak_id = bak_info.id \
                     INNER JOIN users ON bak_log.user_id = users.id \
-                    WHERE MONTH(bak_log.date_added) = ? AND YEAR(bak_log.date_added) = ? \
+                    WHERE MONTHNAME(bak_log.date_added) = ? AND YEAR(bak_log.date_added) = ? \
                     ORDER BY unit, bak_log.date_added;",
                     [req.params.month, req.params.year],
                     function (err, row) {
@@ -99,7 +99,7 @@ router.get("/semaian/:month/:year", function (req, res, next) {
                     FROM semaian_log \
                     INNER JOIN semaian_info ON semaian_id = semaian_info.id \
                     INNER JOIN users ON semaian_log.user_id = users.id \
-                    WHERE MONTH(semaian_log.date_added) = 09 AND YEAR(semaian_log.date_added) = 2020 \
+                    WHERE MONTHNAME(semaian_log.date_added) = 09 AND YEAR(semaian_log.date_added) = 2020 \
                     ORDER BY semaian_info.name, semaian_info.merek_seed, semaian_info.batch_no, semaian_log.date_added;", 
                     [req.params.month, req.params.year],
                     function (err, row) {
