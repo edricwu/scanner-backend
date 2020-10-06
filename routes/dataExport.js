@@ -37,8 +37,8 @@ router.get("/bak/:month/:year", function (req, res, next) {
     var str = req.get('Authorization');
     // console.log(req);
     try {
-        // var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
-        db.query("SELECT id, level FROM users WHERE id = ?", 1, function (err, row0) {
+        var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
+        db.query("SELECT id, level FROM users WHERE id = ?", jwt_info["id"], function (err, row0) {
             if (row0[0]["level"] < 3) {
                 db.query(
                     "SELECT unit AS 'Unit', DATE_FORMAT(bak_log.date_added, '%d/%m/%y') AS Tanggal, \
@@ -82,8 +82,8 @@ router.get("/semaian/:month/:year", function (req, res, next) {
     var str = req.get('Authorization');
     // console.log(req);
     try {
-        // var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
-        db.query("SELECT id, level FROM users WHERE id = ?", 1, function (err, row0) {
+        var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
+        db.query("SELECT id, level FROM users WHERE id = ?", jwt_info["id"], function (err, row0) {
             if (row0[0]["level"] < 3) {
                 db.query(
                     "SELECT semaian_info.name AS 'Tanaman', semaian_info.merek_seed AS 'Merek Seed', \
@@ -99,7 +99,7 @@ router.get("/semaian/:month/:year", function (req, res, next) {
                     FROM semaian_log \
                     INNER JOIN semaian_info ON semaian_id = semaian_info.id \
                     INNER JOIN users ON semaian_log.user_id = users.id \
-                    WHERE MONTHNAME(semaian_log.date_added) = 09 AND YEAR(semaian_log.date_added) = 2020 \
+                    WHERE MONTHNAME(semaian_log.date_added) = ? AND YEAR(semaian_log.date_added) = ? \
                     ORDER BY semaian_info.name, semaian_info.merek_seed, semaian_info.batch_no, semaian_log.date_added;", 
                     [req.params.month, req.params.year],
                     function (err, row) {
