@@ -34,7 +34,7 @@ router.post("/create/bak", function(req, res, next) {
     var str = req.get('Authorization');
     try {
         var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
-        db.query("SELECT id, level FROM users WHERE id = ?", jwt_info["id"], function(err, row) {
+        db.query("SELECT id, level FROM users WHERE id = ?", jwt_info["id"], function(err, row0) {
             if (row0[0]["level"] < 3){
                 db.query(
                     "SELECT random_num \
