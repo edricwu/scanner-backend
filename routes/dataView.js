@@ -188,4 +188,48 @@ router.get("/semaian/semaian_id/:id", function(req, res, next) {
     }
 })
 
+router.post("/update/bak", function(req, res, next) {
+    var str = req.get('Authorization');
+    try {
+        var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
+        db.query("SELECT id, level FROM users WHERE id = ?", jwt_info["id"], function(err, row0) {
+            if (row0[0]["level"] < 3){
+                db.query("UPDATE bak_log SET pH = ?, ppm = ?, suhu_air = ?, suhu_ruangan = ?, \
+                kadar_oksigen = ?, pemakaian_air_ke = ?, keterangan = ? WHERE id = ?",
+                [req.body.pH, req.body.ppm, req.body.suhu_air, req.body.suhu_ruangan, 
+                req.body.kadar_oksigen, req.body.pemakaian_air_ke, req.body.keterangan, req.body.id],
+                function(err, row) {
+                    res.send("Updated");
+                })
+            }
+        })
+    }
+    catch {
+        res.status(401);
+        res.send("Bad Token");
+    }
+})
+
+router.post("/update/semaian", function(req, res, next) {
+    var str = req.get('Authorization');
+    try {
+        var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
+        db.query("SELECT id, level FROM users WHERE id = ?", jwt_info["id"], function(err, row0) {
+            if (row0[0]["level"] < 3){
+                db.query("UPDATE semaian_log SET semai = ?, sprout = ?, pindah_tanam = ?, harvest_pokok = ?, \
+                harvest_kg = ?, sampling_weight = ?, keterangan = ? WHERE id = ?",
+                [req.body.semai, req.body.sprout, req.body.pindah_tanam, req.body.harvest_pokok, 
+                req.body.harvest_kg, req.body.sampling_weight, req.body.keterangan, req.body.id],
+                function(err, row) {
+                    res.send("Updated");
+                })
+            }
+        })
+    }
+    catch {
+        res.status(401);
+        res.send("Bad Token");
+    }
+})
+
 module.exports = router;

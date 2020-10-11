@@ -101,4 +101,23 @@ router.post("/create/semaian", function(req, res, next) {
     }
 })
 
+router.post("/delete", function(req, res, next) {
+    var str = req.get('Authorization');
+    try {
+        var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
+        db.query("SELECT id, level FROM users WHERE id = ?", jwt_info["id"], function(err, row0) {
+            if (row0[0]["level"] < 3){
+                db.query("DELETE FROM ?? WHERE id = ?; DELETE FROM unique_ids WHERE id = ?", 
+                [req.body.type + "_info", req.body.id, req.body.id], function (err, row) {
+                    res.send("Deleted");
+                })
+            }
+        })
+    }
+    catch {
+        res.status(401);
+        res.send("Bad Token");
+    }
+})
+
 module.exports = router;

@@ -73,13 +73,16 @@ router.post("/bak", function(req, res, next) {
 router.post("/semaian", function(req, res, next) {
     var str = req.get('Authorization');
     var data = JSON.parse(req.body.data);
+    // var data = req.body;
+    // console.log(data);
     try {
         var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
         db.query(
-            "insert into semaian_log (semaian_id, user_id, fase, sampling_weight, jumlah_tanaman, keterangan) values (?, ?, ?, ?, ?, ?)",
+            "insert into semaian_log (semaian_id, user_id, semai, sprout, pindah_tanam, harvest_pokok, \
+                harvest_kg, sampling_weight, keterangan) values (?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [
-                data.semaian_id, data.user_id, data.fase, data.sampling_weight, data.jumlah_tanaman, 
-                data.keterangan
+                data.semaian_id, data.user_id, data.semai, data.sprout, data.pindah_tanam, 
+                data.harvest_pokok, data.harvest_kg, data.sampling_weight, data.keterangan
             ],
             function (err, result) {
                 if (err) {
