@@ -13,7 +13,7 @@ router.get("/bak/all_months", function(req, res, next) {
     try {
         var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
         console.log(jwt_info)
-        db.query('SELECT DISTINCT MONTHNAME(date_added) AS Month, YEAR(date_added) AS Year FROM bak_log ORDER BY YEAR(date_added), MONTH(date_added);', function(err, result) {
+        db.query('SELECT DISTINCT MONTHNAME(date_added) AS Month, YEAR(date_added) AS Year FROM bak_log ORDER BY YEAR(date_added), MONTH(date_added) DESC;', function(err, result) {
             console.log(result);
             res.send(result);
         })
@@ -29,7 +29,7 @@ router.get("/semaian/all_months", function(req, res, next) {
     // console.log(req);
     try {
         var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
-        db.query('SELECT DISTINCT MONTHNAME(date_added) AS Month, YEAR(date_added) AS Year FROM semaian_log ORDER BY YEAR(date_added), MONTH(date_added);', function(err, result) {
+        db.query('SELECT DISTINCT MONTHNAME(date_added) AS Month, YEAR(date_added) AS Year FROM semaian_log ORDER BY YEAR(date_added), MONTH(date_added) DESC;', function(err, result) {
             console.log(result);
             res.send(result);
         })
@@ -46,7 +46,7 @@ router.get("/bak/dates/:month/:year", function(req, res, next) {
     try {
         var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
         db.query('SELECT DISTINCT DATE_FORMAT(date_added, "%d/%m/%Y") AS Date FROM bak_log WHERE \
-            (MONTHNAME(date_added), YEAR(date_added)) = (?, ?) ORDER BY date_added;', [req.params.month, req.params.year], function(err, result) {
+            (MONTHNAME(date_added), YEAR(date_added)) = (?, ?) ORDER BY date_added DESC;', [req.params.month, req.params.year], function(err, result) {
             res.send(result);
         })
     }
@@ -62,7 +62,7 @@ router.get("/semaian/dates/:month/:year", function(req, res, next) {
     try {
         var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
         db.query('SELECT DISTINCT DATE_FORMAT(date_added, "%d/%m/%Y") AS Date FROM semaian_log WHERE \
-            (MONTHNAME(date_added), YEAR(date_added)) = (?, ?) ORDER BY date_added;', [req.params.month, req.params.year], function(err, result) {
+            (MONTHNAME(date_added), YEAR(date_added)) = (?, ?) ORDER BY date_added DESC;', [req.params.month, req.params.year], function(err, result) {
                 console.log(err);
             res.send(result);
         })
@@ -117,7 +117,7 @@ router.post("/bak/times", function(req, res, next) {
         var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
         db.query("SELECT DISTINCT bak_log.id, TIME(bak_log.date_added) AS Time FROM bak_log \
             INNER JOIN bak_info ON bak_log.bak_id = bak_info.id WHERE \
-            (DATE(bak_log.date_added), unit) = (str_to_date(?, '%d/%m/%Y'), ?) ORDER BY TIME(bak_log.date_added);", 
+            (DATE(bak_log.date_added), unit) = (str_to_date(?, '%d/%m/%Y'), ?) ORDER BY TIME(bak_log.date_added) DESC;", 
             [req.body.date, req.body.unit], function(err, result) {
                 console.log(err)
                 console.log(result)
@@ -137,7 +137,7 @@ router.post("/semaian/times", function(req, res, next) {
         var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
         db.query("SELECT DISTINCT semaian_log.id, TIME(semaian_log.date_added) AS Time FROM semaian_log \
             INNER JOIN semaian_info ON semaian_log.semaian_id = semaian_info.id WHERE \
-            (DATE(semaian_log.date_added), CONCAT(name, ' - ', batch_no)) = (str_to_date(?, '%d/%m/%Y'), ?) ORDER BY TIME(semaian_log.date_added);", 
+            (DATE(semaian_log.date_added), CONCAT(name, ' - ', batch_no)) = (str_to_date(?, '%d/%m/%Y'), ?) ORDER BY TIME(semaian_log.date_added) DESC;", 
             [req.body.date, req.body.unit], function(err, result) {
                 console.log(err)
                 console.log(result)
