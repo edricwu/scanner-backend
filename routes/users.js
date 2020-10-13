@@ -7,7 +7,7 @@ var router = express.Router();
 var crypto = require('crypto');
 var jwt = require('jsonwebtoken');
 
-var db = require('../../config/mysql');
+var db = require('../config/mysql');
 
 /* GET users listing. */
 router.get('/', function (req, res, next) {
