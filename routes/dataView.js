@@ -9,11 +9,10 @@ var db = require('../config/mysql');
 
 router.get("/bak/all_months", function(req, res, next) {
     var str = req.get('Authorization');
-    // console.log(req);
+    console.log(req);
     try {
         var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
-        console.log(jwt_info)
-        db.query('SELECT DISTINCT MONTHNAME(date_added) AS Month, YEAR(date_added) AS Year FROM bak_log ORDER BY YEAR(date_added), MONTH(date_added) DESC;', function(err, result) {
+        db.query('SELECT DISTINCT MONTHNAME(date_added) AS Month, YEAR(date_added) AS Year FROM bak_log ORDER BY date_added DESC;', function(err, result) {
             console.log(result);
             res.send(result);
         })
@@ -29,7 +28,7 @@ router.get("/semaian/all_months", function(req, res, next) {
     // console.log(req);
     try {
         var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
-        db.query('SELECT DISTINCT MONTHNAME(date_added) AS Month, YEAR(date_added) AS Year FROM semaian_log ORDER BY YEAR(date_added), MONTH(date_added) DESC;', function(err, result) {
+        db.query('SELECT DISTINCT MONTHNAME(date_added) AS Month, YEAR(date_added) AS Year FROM semaian_log ORDER BY date_added DESC;', function(err, result) {
             console.log(result);
             res.send(result);
         })
