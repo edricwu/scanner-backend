@@ -14,7 +14,7 @@ router.get('/', function (req, res, next) {
     var str = req.get('Authorization');
     try {
         var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
-        db.query("SELECT id, name, level FROM users WHERE level >= (SELECT level FROM users where id = ?)", jwt_info["id"], function (err, result) {
+        db.query("SELECT id, name, level FROM users WHERE level >= (SELECT level FROM users WHERE  id = ?) AND deleted = false", jwt_info["id"], function (err, result) {
             res.send(result);
         })
     }
@@ -32,7 +32,7 @@ router.get('/:id', function (req, res, next) {
 
 router.post('/login', function (req, res, next) {
     var password = crypto.createHash('sha256').update(req.body.password).digest('hex');
-    db.query("SELECT * FROM users WHERE (name, password) = (?, ?)", [req.body.name, password], function (err, row) {
+    db.query("SELECT * FROM users WHERE (name, password, deleted) = (?, ?, false)", [req.body.name, password], function (err, row) {
         if (row.length != 0) {
             var payload = {
                 id: row[0]["id"],
@@ -133,7 +133,7 @@ router.post('/delete_user', function(req, res, next) {
             if (row0[0]["level"] < 3) {
                 db.query("SELECT level FROM users WHERE id = ?", req.body.id, function(err, row1) {
                     if (row0[0]["level"] <= row1[0]["level"]) {
-                        db.query("DELETE FROM users WHERE id = ?", req.body.id, function(err, row) {
+                        db.query("UPDATE users SET deleted = true WHERE id = ?", req.body.id, function(err, row) {
                             res.send("User deleted");
                         })
                     }
