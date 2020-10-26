@@ -215,10 +215,10 @@ router.post("/update/semaian", function(req, res, next) {
         var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
         db.query("SELECT id, level FROM users WHERE id = ?", jwt_info["id"], function(err, row0) {
             if (row0[0]["level"] < 3){
-                db.query("UPDATE semaian_log SET semai = ?, sprout = ?, pindah_tanam = ?, harvest_pokok = ?, \
-                harvest_kg = ?, sampling_weight = ?, keterangan = ? WHERE id = ?",
-                [req.body.semai, req.body.sprout, req.body.pindah_tanam, req.body.harvest_pokok, 
-                req.body.harvest_kg, req.body.sampling_weight, req.body.keterangan, req.body.id],
+                db.query("UPDATE semaian_log SET pindah_tanam = ?, harvest_pokok = ?, \
+                harvest_kg = ?, sampling_weight = ?, keterangan = ?, type = ? WHERE id = ?",
+                [req.body.pindah_tanam, req.body.harvest_pokok, 
+                req.body.harvest_kg, req.body.sampling_weight, req.body.keterangan, req.body.type, req.body.id],
                 function(err, row) {
                     res.send("Updated");
                 })
