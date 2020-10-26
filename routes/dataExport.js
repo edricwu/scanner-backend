@@ -88,7 +88,7 @@ router.get("/semaian/:month/:year", function (req, res, next) {
                 db.query(
                     "SELECT semaian_info.name AS 'Tanaman', semaian_info.merek_seed AS 'Merek Seed', \
                         semaian_info.batch_no as 'Kode Batch', DATE_FORMAT(semaian_log.date_added, '%d/%m/%y') AS Tanggal, \
-                        TIME_FORMAT(semaian_log.date_added, '%H:%i') AS Jam, semaian_log.semai AS 'Semai (POKOK)', \
+                        TIME_FORMAT(semaian_log.date_added, '%H:%i') AS Jam, \
                         semaian_log.pindah_tanam AS 'Pindah Tanam', \
                         semaian_log.harvest_pokok AS 'Harvest (POKOK)', semaian_log.harvest_kg AS 'Harvest (kg)', \
                         semaian_log.pindah_tanam + semaian_log.harvest_pokok AS 'Survival Rate (POKOK)', \
