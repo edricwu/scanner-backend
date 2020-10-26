@@ -79,10 +79,11 @@ router.post("/semaian", function(req, res, next) {
         var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
         db.query(
             "insert into semaian_log (semaian_id, user_id, pindah_tanam, harvest_pokok, \
-                harvest_kg, sampling_weight, keterangan) values (?, ?, ?, ?, ?, ?, ?)",
+                harvest_kg, sampling_weight, keterangan, type) values (?, ?, ?, ?, ?, ?, ?, ?)",
             [
                 data.semaian_id, data.user_id, data.pindah_tanam, 
-                data.harvest_pokok, data.harvest_kg, data.sampling_weight, data.keterangan
+                data.harvest_pokok, data.harvest_kg, data.sampling_weight, 
+                data.keterangan, data.type
             ],
             function (err, result) {
                 if (err) {
