@@ -54,7 +54,7 @@ router.post('/add_user', function (req, res, next) {
         var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
         db.query("SELECT level FROM users WHERE id = ?", jwt_info["id"], function(err, row) {
             if (row[0]["level"] < 3){
-                db.query("SELECT * FROM users WHERE name = ?", req.body.name, function (err, row) {
+                db.query("SELECT * FROM users WHERE name = ? AND deleted = false", req.body.name, function (err, row) {
                     if (row.length != 0) {
                         console.log(`User with name ${req.body.name} already exists`);
                         res.status(409);

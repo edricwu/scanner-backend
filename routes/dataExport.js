@@ -89,11 +89,10 @@ router.get("/semaian/:month/:year", function (req, res, next) {
                     "SELECT semaian_info.name AS 'Tanaman', semaian_info.merek_seed AS 'Merek Seed', \
                         semaian_info.batch_no as 'Kode Batch', DATE_FORMAT(semaian_log.date_added, '%d/%m/%y') AS Tanggal, \
                         TIME_FORMAT(semaian_log.date_added, '%H:%i') AS Jam, semaian_log.semai AS 'Semai (POKOK)', \
-                        semaian_log.sprout AS 'Sprout (POKOK)', semaian_log.pindah_tanam AS 'Pindah Tanam', \
+                        semaian_log.pindah_tanam AS 'Pindah Tanam', \
                         semaian_log.harvest_pokok AS 'Harvest (POKOK)', semaian_log.harvest_kg AS 'Harvest (kg)', \
-                        IFNULL(ROUND(semaian_log.harvest_pokok * 100/(semaian_log.harvest_pokok + semaian_log.pindah_tanam), 1), 0) AS 'Harvest (%)', \
-                        semaian_log.semai + semaian_log.sprout + semaian_log.pindah_tanam + semaian_log.harvest_pokok AS 'Survival Rate (POKOK)', \
-                        IFNULL(ROUND((semaian_log.semai + semaian_log.sprout + semaian_log.pindah_tanam + semaian_log.harvest_pokok) * 100/ semaian_info.jumlah_awal, 1), 0) AS 'Survival Rate (%)', \
+                        semaian_log.pindah_tanam + semaian_log.harvest_pokok AS 'Survival Rate (POKOK)', \
+                        IFNULL(ROUND((semaian_log.pindah_tanam + semaian_log.harvest_pokok) * 100/ semaian_info.jumlah_awal, 1), 0) AS 'Survival Rate (%)', \
                         semaian_log.sampling_weight AS 'Sampling Weight', semaian_log.keterangan AS 'Keterangan', \
                         users.name AS 'User' \
                     FROM semaian_log \

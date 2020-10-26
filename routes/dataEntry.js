@@ -78,10 +78,10 @@ router.post("/semaian", function(req, res, next) {
     try {
         var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
         db.query(
-            "insert into semaian_log (semaian_id, user_id, semai, sprout, pindah_tanam, harvest_pokok, \
-                harvest_kg, sampling_weight, keterangan) values (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "insert into semaian_log (semaian_id, user_id, pindah_tanam, harvest_pokok, \
+                harvest_kg, sampling_weight, keterangan) values (?, ?, ?, ?, ?, ?, ?)",
             [
-                data.semaian_id, data.user_id, data.semai, data.sprout, data.pindah_tanam, 
+                data.semaian_id, data.user_id, data.pindah_tanam, 
                 data.harvest_pokok, data.harvest_kg, data.sampling_weight, data.keterangan
             ],
             function (err, result) {
