@@ -109,12 +109,12 @@ router.post("/delete", function(req, res, next) {
             if (row0[0]["level"] < 3){
                 db.query("DELETE FROM ?? WHERE id = ?; DELETE FROM unique_ids WHERE id = ?", 
                 [req.body.type + "_info", req.body.id, req.body.id], function (err, row) {
-                    if (err['errno'] == 1451) {
+                    if (err == null) {
+                        res.send("Deleted");
+                    }
+                    else if (err['errno'] == 1451) {
                         res.status(409);
                         res.send("Unable to delete, id is already tied to log (foreign key)");
-                    }
-                    else {
-                        res.send("Deleted");
                     }
                 })
             }
