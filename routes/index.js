@@ -11,7 +11,7 @@ router.get('/', function(req, res, next) {
             res.status(400);
         }
         else {
-            res.render('index', { title: 'Express' });
+            res.render('index', { title: 'Successful' });
         }
     })
 });
