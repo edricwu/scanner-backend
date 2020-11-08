@@ -89,7 +89,7 @@ router.post('/manage_user', function (req, res, next) {
             if (row0[0]["level"] < 3) {
                 db.query("SELECT level FROM users WHERE id = ?", req.body.id, function (err, row1) {
                     if (row0[0]["level"] <= row1[0]["level"]) {
-                        db.query("SELECT * FROM users WHERE name = ? AND deleted = false", req.body.name, function (err, row) {
+                        db.query("SELECT * FROM users WHERE name = ? AND deleted = false AND id != ?", [req.body.name, req.body.id], function (err, row) {
                             if (row.length != 0) {
                                 console.log(`User with name ${req.body.name} already exists`);
                                 res.status(409);
