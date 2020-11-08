@@ -42,7 +42,7 @@ const connection = mysql.createPool({
 });
 
 connection.on('connection', conn => {
-    conn.query("SET time_zone='+07:00';", error => {
+    conn.query("SET time_zone='+07:00'; SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));", error => {
         if(error){
             throw error
         }
