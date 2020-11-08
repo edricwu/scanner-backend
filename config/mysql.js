@@ -15,11 +15,24 @@ var mysql = require('mysql');
 //     timezone: '+01:00'
 // });
 
+// const connection = mysql.createPool({
+//     host: 'us-cdbr-east-02.cleardb.com',
+//     user: 'bf7f021fb15657',
+//     password: '261c10fc',
+//     database: 'heroku_c5ac1ba9fd3be0b',
+//     timezone: 'UTC',
+//     dateStrings: [
+//         'DATE',
+//         'DATETIME'
+//     ],
+//     multipleStatements: true
+// });
+
 const connection = mysql.createPool({
-    host: 'us-cdbr-east-02.cleardb.com',
-    user: 'bf7f021fb15657',
-    password: '261c10fc',
-    database: 'heroku_c5ac1ba9fd3be0b',
+    host: 'localhost',
+    user: 'remote',
+    password: 'remote123',
+    database: 'greenfeast',
     timezone: 'UTC',
     dateStrings: [
         'DATE',
