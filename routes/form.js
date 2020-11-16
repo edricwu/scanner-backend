@@ -182,7 +182,7 @@ router.post("/panen", function(req, res, next) {
                     db.query(
                         "SELECT DISTINCT \
                             semaian_info.name, semaian_info.batch_no, \
-                            DATE_FORMAT(semaian_log.date_added, '%d-%c-%Y') as 'pindah_tanam' \
+                            DATE_FORMAT(semaian_log.date_added, '%d/%c/%Y') as 'pindah_tanam' \
                         FROM semaian_log \
                             INNER JOIN semaian_info  \
                         WHERE semaian_id = semaian_info.id \
