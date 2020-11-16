@@ -29,7 +29,7 @@ var mysql = require('mysql');
 // });
 
 const connection = mysql.createPool({
-    host: 'localhost',
+    host: '54.254.36.60',
     user: 'remote',
     password: 'remote123',
     database: 'greenfeast',
