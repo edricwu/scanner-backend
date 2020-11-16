@@ -81,7 +81,7 @@ router.post("/create/semaian", function(req, res, next) {
                     LIMIT 1", function(err, row) {
                         db.query(
                             "INSERT INTO unique_ids (id, type) VALUES (?, ?); \
-                            INSERT INTO semaian_info (id, name, user_id, merek_seed, batch_no, jumlah_awal, masa_panen) VALUES (?, ?, ?, ?, ?, ?)", 
+                            INSERT INTO semaian_info (id, name, user_id, merek_seed, batch_no, jumlah_awal, masa_panen) VALUES (?, ?, ?, ?, ?, ?, ?)", 
                             [row[0]["random_num"], "semaian", row[0]["random_num"], req.body.name, row0[0]["id"], req.body.merek_seed, req.body.batch_no, req.body.jumlah_awal, req.body.masa_panen], function(err, row1) {
                                 // console.log(row[0]["random_num"]);
                                 if (err == null) {
