@@ -178,9 +178,11 @@ router.post("/panen", function(req, res, next) {
                     var date2 = date;
                     date1 = date1.format("YYYY-MM-DD");
                     date2 = date2.format("YYYY-MM-DD");
-                    
+                    console.log(date1);
+                    console.log(date2);
                     db.query(" \
                         set @row_number := 0; \
+                        set @semaian_id := 0; \
                         SELECT semaian_info.name, semaian_info.batch_no, \
                             DATE_FORMAT(t1.date_added, '%d/%c/%Y') as 'pindah_tanam' \
                         FROM( \
@@ -193,9 +195,10 @@ router.post("/panen", function(req, res, next) {
                         INNER JOIN semaian_info ON t1.semaian_id = semaian_info.id \
                         WHERE rn = 1 \
                             AND DATE_ADD(t1.date_added, INTERVAL semaian_info.masa_panen DAY) \
-                            BETWEEN '?' AND '?';", [date1, date2], function(err, row){
+                            BETWEEN ? AND ?;", [date1, date2], function(err, row){
+                                console.log(err);
                                 if (err == null) {
-                                    res.send(row);
+                                    res.send(row[2]);
                                 }
                             })
                 }                
