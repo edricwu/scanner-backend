@@ -11,7 +11,7 @@ router.get("/bak/all_months", function(req, res, next) {
     var str = req.get('Authorization');
     console.log(req);
     try {
-        var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
+        // var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
         db.query('SELECT DISTINCT MONTHNAME(date_added) AS Month, YEAR(date_added) AS Year FROM bak_log ORDER BY date_added DESC;', function(err, result) {
             console.log(result);
             res.send(result);
