@@ -13,7 +13,7 @@ var db = require('../config/mysql');
 router.get('/', function (req, res, next) {
     var str = req.get('Authorization');
     try {
-        // var jwt_info =jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
+        var jwt_info =jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
         db.query("SELECT id, name, level FROM users WHERE level >= (SELECT level FROM users WHERE  id = ?) AND deleted = false", jwt_info["id"], function (err, result) {
             res.send(result);
         });
@@ -51,7 +51,7 @@ router.post('/login', function (req, res, next) {
 router.post('/add_user', function (req, res, next) {
     var str = req.get('Authorization');
     try {
-        // var jwt_info =jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
+        var jwt_info =jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
         db.query("SELECT level FROM users WHERE id = ?", jwt_info["id"], function (err, row) {
             if (row[0]["level"] < 3) {
                 db.query("SELECT * FROM users WHERE name = ? AND deleted = false", req.body.name, function (err, row) {
@@ -84,7 +84,7 @@ router.post('/add_user', function (req, res, next) {
 router.post('/manage_user', function (req, res, next) {
     var str = req.get('Authorization');
     try {
-        // var jwt_info =jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
+        var jwt_info =jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
         db.query("SELECT level FROM users WHERE id = ?", jwt_info["id"], function (err, row0) {
             if (row0[0]["level"] < 3) {
                 db.query("SELECT level FROM users WHERE id = ?", req.body.id, function (err, row1) {
@@ -137,7 +137,7 @@ router.post('/manage_user', function (req, res, next) {
 router.post('/delete_user', function (req, res, next) {
     var str = req.get('Authorization');
     try {
-        // var jwt_info =jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
+        var jwt_info =jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
         db.query("SELECT level FROM users WHERE id = ?", jwt_info["id"], function (err, row0) {
             if (row0[0]["level"] < 3) {
                 db.query("SELECT level FROM users WHERE id = ?", req.body.id, function (err, row1) {

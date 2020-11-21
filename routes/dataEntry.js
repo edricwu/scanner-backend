@@ -11,7 +11,7 @@ router.get("/info/:id", function (req, res, next) {
     var str = req.get('Authorization');
     // console.log(req);
     try {
-        // var jwt_info =jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
+        var jwt_info =jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
         db.query("select type from unique_ids where id = ?", req.params.id, function (err, result) {
             if (result.length == 0) {
                 res.status(404);
@@ -44,7 +44,7 @@ router.post("/bak", function(req, res, next) {
     var str = req.get('Authorization');
     var data = JSON.parse(req.body.data);
     try {
-        // var jwt_info =jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
+        var jwt_info =jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
         db.query(
             "insert into bak_log (bak_id, user_id, pH, ppm, suhu_air, suhu_ruangan, kadar_oksigen, pemakaian_air_ke, keterangan) values (?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [
@@ -76,7 +76,7 @@ router.post("/semaian", function(req, res, next) {
     // var data = req.body;
     // console.log(data);
     try {
-        // var jwt_info =jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
+        var jwt_info =jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
         db.query(
             "insert into semaian_log (semaian_id, user_id, pindah_tanam, harvest_pokok, \
                 harvest_kg, sampling_weight, keterangan, type) values (?, ?, ?, ?, ?, ?, ?, ?)",
