@@ -37,8 +37,8 @@ router.get("/bak/:month/:year", function (req, res, next) {
     var str = req.get('Authorization');
     // console.log(req);
     try {
-        // var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
-        db.query("SELECT id, level FROM users WHERE id = ?", 1, function (err, row0) {
+        var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
+        db.query("SELECT id, level FROM users WHERE id = ?", jwt_info["id"], function (err, row0) {
             if (row0[0]["level"] < 3) {
                 var date = req.params.year + "-" + moment().month(req.params.month).format("M") + "-01";
                 db.query(
@@ -83,8 +83,8 @@ router.get("/semaian/:month/:year", function (req, res, next) {
     var str = req.get('Authorization');
     // console.log(req);
     try {
-        // var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
-        db.query("SELECT id, level FROM users WHERE id = ?", 1, function (err, row0) {
+        var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
+        db.query("SELECT id, level FROM users WHERE id = ?", jwt_info["id"], function (err, row0) {
             if (row0[0]["level"] < 3) {
                 var date = req.params.year + "-" + moment().month(req.params.month).format("M") + "-01";
                 db.query(
@@ -135,8 +135,8 @@ router.get("/panen/:month/:year", function (req, res, next) {
     var str = req.get('Authorization');
     // console.log(req);
     try {
-        // var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
-        db.query("SELECT id, level FROM users WHERE id = ?", 1, function (err, row0) {
+        var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
+        db.query("SELECT id, level FROM users WHERE id = ?", jwt_info["id"], function (err, row0) {
             if (row0[0]["level"] < 3) {
                 var date = req.params.year + "-" + moment().month(req.params.month).format("M") + "-01";
                 db.query(

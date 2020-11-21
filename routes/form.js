@@ -11,7 +11,7 @@ var moment = require('moment');
 router.get('/:type', function(req, res, next) {
     var str = req.get('Authorization');
     try {
-        // var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
+        var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
         db.query("SELECT level FROM users WHERE id = ?", jwt_info["id"], function(err, row) {
             if (row[0]["level"] < 3){
                 db.query("SELECT ??.*, users.name AS username FROM ?? INNER JOIN users WHERE user_id = users.id ORDER BY ??.date_added DESC", [req.params.type + "_info", req.params.type + "_info", req.params.type + "_info"], function(err, row) {
@@ -34,8 +34,8 @@ router.get('/:type', function(req, res, next) {
 router.post("/create/bak", function(req, res, next) {
     var str = req.get('Authorization');
     try {
-        // var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
-        db.query("SELECT id, level FROM users WHERE id = ?", 1, function(err, row0) {
+        var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
+        db.query("SELECT id, level FROM users WHERE id = ?", jwt_info["id"], function(err, row0) {
             if (row0[0]["level"] < 3){
                 db.query(
                     "SELECT random_num \
@@ -69,8 +69,8 @@ router.post("/create/bak", function(req, res, next) {
 router.post("/create/semaian", function(req, res, next) {
     var str = req.get('Authorization');
     try {
-        // var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
-        db.query("SELECT id, level FROM users WHERE id = ?", 1, function(err, row0) {
+        var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
+        db.query("SELECT id, level FROM users WHERE id = ?", jwt_info["id"], function(err, row0) {
             if (row0[0]["level"] < 3){
                 db.query(
                     "SELECT random_num \
@@ -105,8 +105,8 @@ router.post("/create/semaian", function(req, res, next) {
 router.post("/delete", function(req, res, next) {
     var str = req.get('Authorization');
     try {
-        // var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
-        db.query("SELECT id, level FROM users WHERE id = ?", 1, function(err, row0) {
+        var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
+        db.query("SELECT id, level FROM users WHERE id = ?", jwt_info["id"], function(err, row0) {
             if (row0[0]["level"] < 3){
                 db.query("DELETE FROM ?? WHERE id = ?; DELETE FROM unique_ids WHERE id = ?", 
                 [req.body.type + "_info", req.body.id, req.body.id], function (err, row) {
@@ -134,8 +134,8 @@ router.post("/delete", function(req, res, next) {
 router.post("/modify_semaian", function(req, res, next) {
     var str = req.get('Authorization');
     try {
-        // var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
-        db.query("SELECT id, level FROM users WHERE id = ?", 1, function(err, row0) {
+        var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
+        db.query("SELECT id, level FROM users WHERE id = ?", jwt_info["id"], function(err, row0) {
             if (row0[0]["level"] < 3){
                 db.query("UPDATE semaian_info SET masa_panen = ? WHERE id = ?", 
                 [req.body.masa_panen, req.body.id], function (err, row) {
@@ -159,8 +159,8 @@ router.post("/modify_semaian", function(req, res, next) {
 router.post("/panen", function(req, res, next) {
     var str = req.get('Authorization');
     try {
-        // var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
-        db.query("SELECT id, level FROM users WHERE id = ?", 1, function(err, row0) {
+        var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
+        db.query("SELECT id, level FROM users WHERE id = ?", jwt_info["id"], function(err, row0) {
             if (row0[0]["level"] < 3){
                 var date = moment(req.body.date, "DD-MM-YYYY");
                 var day = date.day();
