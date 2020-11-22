@@ -48,7 +48,7 @@ router.get("/bak/:month/:year", function (req, res, next) {
                         pemakaian_air_ke AS 'Pemakaian Air ke', keterangan AS 'Keterangan', users.name AS 'User' FROM bak_log \
                     INNER JOIN bak_info ON bak_id = bak_info.id \
                     INNER JOIN users ON bak_log.user_id = users.id \
-                    WHERE bak_log.date_added BETWEEN ? AND LAST_DAY(?) \
+                    WHERE DATE(bak_log.date_added) BETWEEN ? AND LAST_DAY(?) \
                     ORDER BY unit, bak_log.date_added;",
                     [date, date],
                     function (err, row) {
@@ -100,7 +100,7 @@ router.get("/semaian/:month/:year", function (req, res, next) {
                     FROM semaian_log \
                     INNER JOIN semaian_info ON semaian_id = semaian_info.id \
                     INNER JOIN users ON semaian_log.user_id = users.id \
-                    WHERE semaian_log.date_added BETWEEN ? AND LAST_DAY (?) \
+                    WHERE DATE(semaian_log.date_added) BETWEEN ? AND LAST_DAY (?) \
                     ORDER BY semaian_info.name, semaian_info.merek_seed, semaian_info.batch_no, semaian_log.date_added;", 
                     [date, date],
                     function (err, row) {
@@ -156,8 +156,8 @@ router.get("/panen/:month/:year", function (req, res, next) {
                         FROM semaian_log ORDER BY date_added DESC) t1 \
                     INNER JOIN semaian_info ON t1.semaian_id = semaian_info.id \
                     WHERE rn = 1 \
-                        AND DATE_ADD(t1.date_added, INTERVAL semaian_info.masa_panen DAY) \
-                        BETWEEN '2020-11-01' AND LAST_DAY('2020-11-01');", 
+                        AND DATE_ADD(DATE(t1.date_added), INTERVAL semaian_info.masa_panen DAY) \
+                        BETWEEN ? AND LAST_DAY(?);", 
                     [date, date],
                     function (err, row) {
                         row = row[2];

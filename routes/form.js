@@ -194,7 +194,7 @@ router.post("/panen", function(req, res, next) {
                         FROM semaian_log ORDER BY date_added DESC) t1 \
                         INNER JOIN semaian_info ON t1.semaian_id = semaian_info.id \
                         WHERE rn = 1 \
-                            AND DATE_ADD(t1.date_added, INTERVAL semaian_info.masa_panen DAY) \
+                            AND DATE_ADD(DATE(t1.date_added), INTERVAL semaian_info.masa_panen DAY) \
                             BETWEEN ? AND ?;", [date1, date2], function(err, row){
                                 console.log(err);
                                 if (err == null) {

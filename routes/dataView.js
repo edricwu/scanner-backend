@@ -11,7 +11,7 @@ router.get("/bak/all_months", function(req, res, next) {
     var str = req.get('Authorization');
     console.log(req);
     try {
-        // var jwt_info =jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
+        var jwt_info =jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
         db.query('SELECT DISTINCT MONTHNAME(date_added) AS Month, YEAR(date_added) AS Year FROM bak_log ORDER BY date_added DESC;', function(err, result) {
             console.log(result);
             res.send(result);
@@ -43,9 +43,10 @@ router.get("/bak/dates/:month/:year", function(req, res, next) {
     var str = req.get('Authorization');
     // console.log(req);
     try {
-        // var jwt_info =jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
-        db.query('SELECT DISTINCT DATE_FORMAT(date_added, "%d/%m/%Y") AS Date FROM bak_log WHERE \
-            (MONTHNAME(date_added), YEAR(date_added)) = (?, ?) ORDER BY date_added DESC;', [req.params.month, req.params.year], function(err, result) {
+        var jwt_info = jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
+        var date = req.params.year + "-" + moment().month(req.params.month).format("M") + "-01";
+        db.query("SELECT DISTINCT DATE_FORMAT(date_added, '%d/%m/%Y') AS Date FROM bak_log WHERE \
+        DATE(date_added) BETWEEN ? AND LAST_DAY(?) ORDER BY date_added DESC;", [date, date], function(err, result) {
             res.send(result);
         })
     }
@@ -60,9 +61,9 @@ router.get("/semaian/dates/:month/:year", function(req, res, next) {
     // console.log(req);
     try {
         var jwt_info =jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
-        db.query('SELECT DISTINCT DATE_FORMAT(date_added, "%d/%m/%Y") AS Date FROM semaian_log WHERE \
-            (MONTHNAME(date_added), YEAR(date_added)) = (?, ?) ORDER BY date_added DESC;', [req.params.month, req.params.year], function(err, result) {
-                console.log(err);
+        var date = req.params.year + "-" + moment().month(req.params.month).format("M") + "-01";
+        db.query("SELECT DISTINCT DATE_FORMAT(date_added, '%d/%m/%Y') AS Date FROM semaian_log WHERE \
+        DATE(date_added) BETWEEN ? AND LAST_DAY(?) ORDER BY date_added DESC;", [date, date], function(err, result) {
             res.send(result);
         })
     }
