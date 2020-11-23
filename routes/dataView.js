@@ -6,6 +6,7 @@ dotenv.config();
 
 var jwt = require('jsonwebtoken');
 var db = require('../config/mysql');
+var moment = require('moment');
 
 router.get("/bak/all_months", function(req, res, next) {
     var str = req.get('Authorization');
@@ -62,6 +63,7 @@ router.get("/semaian/dates/:month/:year", function(req, res, next) {
     try {
         var jwt_info =jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
         var date = req.params.year + "-" + moment().month(req.params.month).format("M") + "-01";
+        console.log(date);
         db.query("SELECT DISTINCT DATE_FORMAT(date_added, '%d/%m/%Y') AS Date FROM semaian_log WHERE \
         DATE(date_added) BETWEEN ? AND LAST_DAY(?) ORDER BY date_added DESC;", [date, date], function(err, result) {
             res.send(result);
