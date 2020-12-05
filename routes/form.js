@@ -162,46 +162,71 @@ router.post("/panen", function(req, res, next) {
         var jwt_info =jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
         db.query("SELECT id, level FROM users WHERE id = ?", jwt_info["id"], function(err, row0) {
             if (row0[0]["level"] < 3){
-                var date = moment(req.body.date, "DD-MM-YYYY");
-                var day = date.day();
-                if (day == 0 || day == 2 || day == 4) {
-                    res.send([]);
-                }
-                else {
-                    var date1;
-                    if (day == 6) {
-                        date1 = date; 
-                    }
-                    else {
-                        date1 = moment(req.body.date, "DD-MM-YYYY").subtract(1, "day");
-                    }   
-                    var date2 = date;
-                    date1 = date1.format("YYYY-MM-DD");
-                    date2 = date2.format("YYYY-MM-DD");
-                    console.log(date1);
-                    console.log(date2);
-                    db.query(" \
-                        set @row_number := 0; \
-                        set @semaian_id := 0; \
-                        SELECT semaian_info.name, semaian_info.batch_no, \
-                            DATE_FORMAT(t1.date_added, '%d/%c/%Y') as 'pindah_tanam' \
-                        FROM( \
-                        SELECT \
-                            @row_number:= IF(@semaian_id = semaian_id, @row_number + 1, 1) \
-                            AS rn, \
-                            @semaian_id:=semaian_id semaian_id, \
-                            date_added \
-                        FROM semaian_log ORDER BY date_added DESC) t1 \
-                        INNER JOIN semaian_info ON t1.semaian_id = semaian_info.id \
-                        WHERE rn = 1 \
-                            AND DATE_ADD(DATE(t1.date_added), INTERVAL semaian_info.masa_panen DAY) \
-                            BETWEEN ? AND ?;", [date1, date2], function(err, row){
-                                console.log(err);
-                                if (err == null) {
-                                    res.send(row[2]);
-                                }
-                            })
-                }                
+                var date = moment(req.body.date, "DD-MM-YYYY").format("YYYY-MM-DD");
+                
+                    
+                db.query(" \
+                    set @row_number := 0; \
+                    set @semaian_id := 0; \
+                    SELECT semaian_info.name, semaian_info.batch_no, \
+                        DATE_FORMAT(t1.date_added, '%d/%c/%Y') as 'pindah_tanam' \
+                    FROM( \
+                    SELECT \
+                        @row_number:= IF(@semaian_id = semaian_id, @row_number + 1, 1) \
+                        AS rn, \
+                        @semaian_id:=semaian_id semaian_id, \
+                        date_added \
+                    FROM semaian_log ORDER BY date_added DESC) t1 \
+                    INNER JOIN semaian_info ON t1.semaian_id = semaian_info.id \
+                    WHERE rn = 1 \
+                        AND DATE_ADD(DATE(t1.date_added), INTERVAL semaian_info.masa_panen DAY) \
+                        = ?;", [date], function(err, row){
+                            console.log(err);
+                            if (err == null) {
+                                res.send(row[2]);
+                            }
+                        })
+                
+                // var date = moment(req.body.date, "DD-MM-YYYY");
+                // var day = date.day();
+                // if (day == 0 || day == 2 || day == 4) {
+                //     res.send([]);
+                // }
+                // else {
+                //     var date1;
+                //     if (day == 6) {
+                //         date1 = date; 
+                //     }
+                //     else {
+                //         date1 = moment(req.body.date, "DD-MM-YYYY").subtract(1, "day");
+                //     }   
+                //     var date2 = date;
+                //     date1 = date1.format("YYYY-MM-DD");
+                //     date2 = date2.format("YYYY-MM-DD");
+                //     console.log(date1);
+                //     console.log(date2);
+                //     db.query(" \
+                //         set @row_number := 0; \
+                //         set @semaian_id := 0; \
+                //         SELECT semaian_info.name, semaian_info.batch_no, \
+                //             DATE_FORMAT(t1.date_added, '%d/%c/%Y') as 'pindah_tanam' \
+                //         FROM( \
+                //         SELECT \
+                //             @row_number:= IF(@semaian_id = semaian_id, @row_number + 1, 1) \
+                //             AS rn, \
+                //             @semaian_id:=semaian_id semaian_id, \
+                //             date_added \
+                //         FROM semaian_log ORDER BY date_added DESC) t1 \
+                //         INNER JOIN semaian_info ON t1.semaian_id = semaian_info.id \
+                //         WHERE rn = 1 \
+                //             AND DATE_ADD(DATE(t1.date_added), INTERVAL semaian_info.masa_panen DAY) \
+                //             BETWEEN ? AND ?;", [date1, date2], function(err, row){
+                //                 console.log(err);
+                //                 if (err == null) {
+                //                     res.send(row[2]);
+                //                 }
+                //             })
+                // }                
             }
             else {
                 res.status(403);
