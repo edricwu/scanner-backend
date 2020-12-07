@@ -168,6 +168,7 @@ router.post("/panen", function(req, res, next) {
                     set @row_number := 0; \
                     set @semaian_id := 0; \
                     SELECT semaian_info.name, semaian_info.batch_no, \
+                        DATE_FORMAT(semaian_info.date_added, '%d/%c/%Y') as 'tanggal_semai', \
                         DATE_FORMAT(t1.date_added, '%d/%c/%Y') as 'pindah_tanam' \
                     FROM( \
                     SELECT \
