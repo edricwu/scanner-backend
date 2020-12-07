@@ -32,7 +32,8 @@ const connection = mysql.createPool({
     host: '54.254.36.60',
     user: 'remote',
     password: 'remote123',
-    database: 'greenfeast',
+    // database: 'greenfeast',
+    database: 'greenfeast_new',
     timezone: 'UTC',
     dateStrings: [
         'DATE',

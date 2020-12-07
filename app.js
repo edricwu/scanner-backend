@@ -9,6 +9,7 @@ var dataEntryRouter = require('./routes/dataEntry');
 var dataViewRouter = require('./routes/dataView');
 var formRouter = require('./routes/form');
 var exportRouter = require('./routes/dataExport');
+var listRouter = require('./routes/list');
 
 var app = express();
 
@@ -24,5 +25,6 @@ app.use('/data_entry', dataEntryRouter);
 app.use('/data_view', dataViewRouter);
 app.use('/form', formRouter);
 app.use('/export', exportRouter);
+app.use('/list', listRouter);
 
 module.exports = app;

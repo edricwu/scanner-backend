@@ -28,7 +28,6 @@ router.get('/:type', function(req, res, next) {
         res.status(401);
         res.send("Bad Token");
     }
-    
 })
 
 router.post("/create/bak", function(req, res, next) {
