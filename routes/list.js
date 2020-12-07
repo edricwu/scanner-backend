@@ -91,8 +91,8 @@ router.post("/modify_semaian", function(req, res, next) {
         var jwt_info =jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
         db.query("SELECT id, level FROM users WHERE id = ?", jwt_info["id"], function(err, row0) {
             if (row0[0]["level"] <= 1){
-                db.query("UPDATE semaian_form SET name = ?, merek_seed = ?, masa_panen = ? WHERE id = ?", 
-                [req.body.name, req.body.merek_seed, req.body.masa_panen, req.body.id], function (err, row) {
+                db.query("UPDATE semaian_form SET masa_panen = ? WHERE id = ?", 
+                [req.body.masa_panen, req.body.id], function (err, row) {
                     if (err == null) {
                         res.send("Successful");
                     }
