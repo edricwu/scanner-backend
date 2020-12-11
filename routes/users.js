@@ -16,9 +16,19 @@ router.get('/', function (req, res, next) {
     var str = req.get('Authorization');
     try {
         var jwt_info =jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
-        db.query("SELECT id, name, level FROM users WHERE level >= (SELECT level FROM users WHERE  id = ?) AND deleted = false", jwt_info["id"], function (err, result) {
-            res.send(result);
-        });
+        db.query("SELECT level FROM users WHERE  id = ?", jwt_info["id"], function(err, row0) {
+            var level = row0[0]["level"];
+            var query;
+            if (level > 2){
+                query = "SELECT id, name, level FROM users WHERE level > ?";
+            }
+            else{
+                query = "SELECT id, name, level FROM users WHERE level >= ?"
+            }
+            db.query(query, level, function(err, row) {
+                res.send(row);
+            })
+        })
     }
     catch {
         res.status(401);

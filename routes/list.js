@@ -13,7 +13,7 @@ router.get('/:type', function(req, res, next) {
     try {
         var jwt_info =jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
         db.query("SELECT level FROM users WHERE id = ?", jwt_info["id"], function(err, row) {
-            if (row[0]["level"] <= 1){
+            if (row[0]["level"] <= 2){
                 db.query("SELECT ??.*, users.name AS username FROM ?? INNER JOIN users WHERE ??.deleted = false AND user_id = users.id ORDER BY ??.date_added DESC", 
                     [req.params.type + "_form", req.params.type + "_form", req.params.type + "_form", req.params.type + "_form"], 
                     function(err, row) {
