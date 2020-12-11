@@ -161,7 +161,7 @@ router.post("/panen", function(req, res, next) {
     try {
         var jwt_info =jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
         db.query("SELECT id, level FROM users WHERE id = ?", jwt_info["id"], function(err, row0) {
-            if (row0[0]["level"] < 3){
+            if (row0[0]["level"] <= 3){
                 var date = moment(req.body.date, "DD-MM-YYYY").format("YYYY-MM-DD");
                 
                     
