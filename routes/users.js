@@ -19,13 +19,13 @@ router.get('/', function (req, res, next) {
         db.query("SELECT level FROM users WHERE  id = ?", jwt_info["id"], function(err, row0) {
             var level = row0[0]["level"];
             var query;
-            if (level > 2){
-                query = "SELECT id, name, level FROM users WHERE level > ? AND deleted = false";
+            if (level > 1){
+                query = "SELECT id, name, level FROM users WHERE (level > ? OR id = ?) AND deleted = false";
             }
             else{
-                query = "SELECT id, name, level FROM users WHERE level >= ? AND deleted = false"
+                query = "SELECT id, name, level FROM users WHERE (level >= ? OR id = ?) AND deleted = false"
             }
-            db.query(query, level, function(err, row) {
+            db.query(query, [level, jwt_info["id"]], function(err, row) {
                 res.send(row);
             })
         })
