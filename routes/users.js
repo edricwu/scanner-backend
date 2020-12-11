@@ -20,10 +20,10 @@ router.get('/', function (req, res, next) {
             var level = row0[0]["level"];
             var query;
             if (level > 2){
-                query = "SELECT id, name, level FROM users WHERE level > ?";
+                query = "SELECT id, name, level FROM users WHERE level > ? AND deleted = false";
             }
             else{
-                query = "SELECT id, name, level FROM users WHERE level >= ?"
+                query = "SELECT id, name, level FROM users WHERE level >= ? AND deleted = false"
             }
             db.query(query, level, function(err, row) {
                 res.send(row);
