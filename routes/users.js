@@ -66,7 +66,7 @@ router.post('/add_user', function (req, res, next) {
         var jwt_info =jwt.verify(str, process.env.JWT_SECRET_KEY, { algorithm: 'HS256' });
         db.query("SELECT level FROM users WHERE id = ?", jwt_info["id"], function (err, row) {
             if (row[0]["level"] < 3) {
-                db.query("SELECT COUNT(*) AS num_user FROM greenfeast.users WHERE deleted = false AND level = ?;", req.body.level, 
+                db.query("SELECT COUNT(*) AS num_user FROM users WHERE deleted = false AND level = ?;", req.body.level, 
                 function(err, row) {
                     if (row[0]["num_user"] >= user_limit[req.body.level]) {
                         res.status(405);
@@ -111,7 +111,7 @@ router.post('/manage_user', function (req, res, next) {
             if (row0[0]["level"] < 3) {
                 db.query("SELECT level FROM users WHERE id = ?", req.body.id, function (err, row1) {
                     if (row0[0]["level"] <= row1[0]["level"]) {
-                        db.query("SELECT COUNT(*) AS num_user FROM greenfeast.users WHERE deleted = false AND level = ? AND id != ?;",
+                        db.query("SELECT COUNT(*) AS num_user FROM users WHERE deleted = false AND level = ? AND id != ?;",
                             [req.body.level, req.body.id], function(err, row) {
                                 if (row[0]["num_user"] >= user_limit[req.body.level]) {
                                     res.status(405);
