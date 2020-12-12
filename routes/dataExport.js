@@ -145,6 +145,7 @@ router.get("/panen/:month/:year", function (req, res, next) {
                     set @semaian_id := 0; \
                     SELECT semaian_info.name AS 'Tanaman', semaian_info.merek_seed AS 'Merek Seed', \
                         semaian_info.batch_no AS 'Kode Batch', \
+                        DATE_FORMAT(semaian_info.date_added, '%d/%c/%Y') AS 'Tanggal Semai' , \
                         DATE_FORMAT(t1.date_added, '%d/%c/%Y') AS 'Pindah Tanam' , \
                         DATE_FORMAT(DATE_ADD(t1.date_added, INTERVAL semaian_info.masa_panen DAY), '%d/%c/%Y') AS 'Panen' \
                     FROM( \
